@@ -1,0 +1,291 @@
+---
+title: "Exploring the Relationship between Environmental Conditions and Marathon Performances"
+format: pdf
+editor: visual
+bibliography: references.bib
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+# Abstract
+
+Past research revealed significant differences in marathon performance influenced by gender, age. Meanwhile, age may influence thermoregulation as well. We therefore designated to explore the impact of environmental conditions on marathon performances, including weather and air quality. Exploratory data analysis and polynomial regression were employed to verify the influence of weather conditions and air quality on marathon performances. We also identified weather parameters that have the largest impact.
+
+# Introduction
+
+The factors influencing marathon performance have always been a topic of interest, and existing research has confirmed the impact of weather conditions on performance. For instance, increasing WBGT has been shown to slow marathon performance [@Ely2007; @Ely2010], and the effects of weather are less evident in female runners. Additionally, marathon performance exhibits differences related to age and gender: men are more likely than women to experience a slowdown during a marathon, and older runners tend to have less pace variance compared to younger runners. Moreover, masters men and women are negatively impacted by higher temperatures and humidity during the New York City marathon. Endurance performance degrades with increasing environmental temperature, and this decline in performance associated with warmer temperatures is magnified in longer-distance events such as the marathon (42.2 km). Older adults also face thermoregulatory challenges that impair their ability to dissipate heat, further exacerbating the impact of elevated temperatures. Lastly, there are well-documented sex differences in endurance performance [Besson2022] and in the physiological processes related to thermoregulation. Additionally, research has indicated the impact of age on thermoregulation [@Yanovich2020], highlighting a reduced ability to tolerate heat stress in older individuals [@Kenney2003]. However, the relationship between marathon performance and environmental conditions, particularly air quality, as well as the differences based on age and gender, remains to be explored.
+
+Therefore, this study aims to confirm the relationships between weather conditions, air quality, and marathon performance, while further identifying the weather parameters that have the greatest impact on performance. We hypothesize that the slowing of performance would be more pronounced with high WBGT or AQI in older individuals compared to younger ones, and similar trends would be observed in both men and women. To achieve our goals, we will employ exploratory data analysis and polynomial regression.
+
+# Data Collection
+
+The current study uses the data collected from marathon race results for Boston, Chicago, New York, Twin Cities, Grandma’s Marathons for 17 to 24 years, 1993-2016. To evaluate marathon performance, we extracted fastest finishing time among men and women at each year of age, compared with the course record (%CR). The data also attaches parameters that recorded local weather conditions, including Td(dry bulb temperature in Celsius), Tw(wet bulb temperature in Celsius), %rh(percent relative humidity) and so on. Wet bulb globe temperature (WGBT) is calculated by weighting these weather parameters and is regarded as a general measurement that integrate all of weather information. Additionally, another data set records local air quality by AQI of each race, which is regarded as a reflection of environmental conditions as well.
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+library(lubridate)
+library(patchwork)
+library(gt)
+library(gtsummary)
+library(broom)
+```
+
+```{r}
+aqi <- read.csv("aqi_values_ext.csv") %>%
+  mutate(year=date_local %>% ymd %>% year) %>%
+  group_by(marathon, year) %>%
+  summarise(aqi=mean(aqi, na.rm=T),
+            arithmetic_mean=mean(arithmetic_mean))
+df <- read.csv("project1.csv", header=T,
+               col.names=c("race", "year", "sex", "flag", "age", 
+                           "CR", "Td", "Tw", "rh", "Tg", "SR", 
+                           "DP", "wind", "WBGT")) %>%
+  mutate(race=case_when(race==0 ~ "Boston",
+                        race==1 ~ "Chicago",
+                        race==2 ~ "NYC",
+                        race==3 ~ "TC",
+                        race==4 ~ "Duluth",
+                        TRUE ~ NA),
+         sex=case_when(sex==0 ~ "Female",
+                       sex==1 ~ "Male",
+                       TRUE ~ NA),
+         flag=factor(flag, levels=c("White", "Green", "Yellow", "Red", "Black"))) %>%
+  left_join(aqi, by=c("race"="marathon", "year"))
+```
+
+# Data Processing
+
+The raw marathon data included 11,564 cases with 8 variables that recorded weather conditions, 2 demographic variables and a variable that records marathon performances, while the air quality data mainly contains AQI(Air Quality Index). According to the city and year of each race, we merged two data sets to incorporate both weather information and air quality.
+Before the analysis, a summary table of each variable was constructed to obtain a rough picture of our combined data set. The missingness of weather conditions and AQI is explicitly inspected. As @tbl-summary_df suggests, most of the variables didn't show significant differences between genders, while women tend to achieve better marathon performances and have younger age than men do. It is believed that the data was collected from equal samples, and avoided the possibility of confoundness between variables. In addition, we observed large missingness in weather parameters and AQI, whose number of missing cases reaches to approximately 500 and 4000, respectively. 
+
+```{r}
+#| label: tbl-summary_df
+#| tbl-cap: Summary table of marathon data
+df %>%
+  mutate(flag=ifelse(flag=="", NA, flag)) %>%
+  tbl_summary(
+    by = "sex",  # Group by sex
+    statistic = list(
+      year ~ "[{min}, {max}]",  # Only range for 'year'
+      age ~ "[{min}, {max}]",   # Only range for 'age'
+      c(CR, Td, Tw, rh, Tg, SR, DP, wind, WBGT, aqi) ~ "{mean} ({sd})",  # For other continuous variables
+      all_categorical() ~ "{n}/{N} ({p}%)"  # For categorical variables
+    ),
+    missing = "ifany",  # Add missing data information
+    digits = list(c(CR, Td, Tw, rh, Tg, SR, DP, wind, WBGT, aqi) ~ c(2, 2))
+  ) %>%
+  # Remove the 'Mean (SD), Min - Max' text from the table body
+  modify_header(stat_0 = "**Statistics**") %>%
+  modify_footnote(
+    all_stat_cols() ~ "Mean (SD), Min - Max are reported for continuous variables. Count (%) for categorical variables."
+  ) %>%
+  add_overall() %>%
+  add_p()
+```
+To further investigate the missing patterns of weather parameters and AQI, we counted the number of missing cases across races. We first focus on the missingness of weather parameters. It has been suggested that during 2011-2012, races held in Chicago, New York, Twin Cities, and Duluth experienced significant data missing issues (@tbl-mis_WBGT). Notably, both Twin Cities and Duluth lacked air quality data. Given the geographical proximity of these two cities (both located in Minnesota), it is plausible that the regional climate center encountered major disruptions, possibly due to disasters or other issues, which impacted data recording and reporting.
+```{r}
+#| label: tbl-mis_WBGT
+#| tbl-cap: Summary table of cases that missing WBGT
+df %>%
+  filter(is.na(WBGT)) %>%
+  group_by(year, race) %>%
+  summarise(num = n(), .groups = "drop") %>% # Summarise with group by race and year
+  left_join(aqi, by=c("race"="marathon", "year")) %>%
+  kable(col.names = c("Year", "Race", "Number of cases that missing weather conditions", "AQI", "AQI_ext")) %>%
+  kable_styling(full_width=F, position="center") %>%
+  column_spec(2, width = "3em") %>%
+  column_spec(3, width = "10em") 
+```
+Furthermore, we paid attention to the missing air quality data. As shown by @fig-mis_AQI, Duluth and Twin Cities ceased reporting air quality data after 2000, while other cities reported no such issues. Combined with previous evidence, it can be inferred that Minnesota may have discontinued reporting these statistics in favor of other air quality measurements, or the data may have experienced systematic missingness during the collection process. In conclusion, the missingness of weather parameters and AQI is likely Missing Not at Random (MNAR) and should be carefully considered in the analysis.
+```{r}
+#| label: fig-mis_AQI
+#| fig-cap: Number of cases that missing AQI
+df %>%
+  group_by(year, race) %>%
+  summarise(num=sum(is.na(aqi))) %>%
+  ggplot(aes(x = year, y = num)) +  # Set year as x and num as y
+  geom_line(aes(color = factor(race))) +
+  geom_point(aes(color = factor(race))) +  # Plot points
+  scale_x_continuous(breaks = seq(min(df$year), max(df$year), by = 1)) +  # Ensure x-axis ticks are aligned
+  labs(
+    x = "Year",  # Change x-axis label
+    y = "Number of Missing Cases",  # Change y-axis label
+    color = "Race",  # Change legend label
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+```
+
+# Results
+### Marathon Performance across Age
+Our first aim is to examine the effects of increasing age on marathon performance in men and women. As shown in the @fig-WM, marathon performance generally exhibits an asymmetric concave quadratic relationship with age. From around 14 to 25 years old, individuals' marathon times continuously decrease, reaching a minimum at the lowest point, after which the times steadily increase, eventually reaching up to three times the best record. At the same time, men and women show different declining trends: overall, men perform better in marathons than women, and the age distribution of marathon participants is broader for men, but their performance also declines more significantly with increasing age.
+```{r}
+#| label: fig-WM
+#| fig-cap: Marathon performance between men and women across age
+df_summary <- df %>%
+  group_by(age, sex) %>%
+  summarise(mean=mean(CR),
+            se=sd(CR)/sqrt(n()),
+            .groups="drop")
+
+ggplot(df, aes(x=age, color=sex, fill=sex)) +
+  geom_smooth(aes(y = CR), method = "loess", se = TRUE, size=1.2, alpha=0.2) +  # Fit a curve with a confidence interval using LOESS
+  geom_point(data=df_summary, aes(y=mean), size=0.8) +
+  geom_errorbar(data=df_summary, aes(y=mean, ymin=mean-se, ymax=mean+se), width=2, size=0.5) +
+  scale_color_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +
+  scale_fill_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +
+  labs(x = "Age", y = "Best Time (%CR)") +
+  theme_minimal()
+```
+### Marathon Performances across Weather Conditions
+Next, we aim to examine the effects of weather conditions on marathon performance and whether these effects differ between genders. We first transformed the continuous WBGT variable into a flag variable with five levels to reflect the risk of heat illness. WBGT values of <10°C, 10-18°C, 18-23°C, 23-28°C, and >28°C correspond to the flags white, green, yellow, red, and black, respectively. As shown in @fig-flag, marathon performance does not appear to differ across weather conditions, and the marathon times for men and women under the same weather conditions are also very similar. However, it is worth noting that there are many outliers in all groups, which may need to be removed in future analyses to avoid the influence of extreme values.
+```{r}
+#| label: fig-flag
+#| fig-cap: Marathon performance under different weather conditions
+plt1 <- df %>%
+  filter(flag!="") %>%
+  ggplot(aes(x = flag, fill = sex)) +
+  geom_boxplot(aes(y = CR)) +  # Set alpha for transparent CIs
+  scale_fill_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +   # Same color for CIs
+  labs(x = "Flag", y = "Best Time (%CR)") +
+  theme_minimal()
+plt2 <- df %>%
+  filter(flag!="") %>%
+  ggplot(aes(x = age, color = flag, fill = flag)) +
+  geom_smooth(aes(y = CR), method = "loess", se = TRUE, size = 1.2, alpha = 0.5) +  # Set alpha for transparent CIs
+  scale_color_manual(values = c("White" = "#D9D9D9", "Green" = "#4CAF50", 
+                                "Yellow"="#FFD700", "Red"="#E57373", "Black"="black")) +  # Custom color for lines
+  scale_fill_manual(values = c("White" = "#D9D9D9", "Green" = "#4CAF50", 
+                                "Yellow"="#FFD700", "Red"="#E57373", "Black"="black")) +   # Same color for CIs
+  labs(x = "Age", y = "Best Time (%CR)") +
+  theme_minimal()
+plt1 / plt2
+```
+Moreover, it is also worth investigating whether the effect of weather conditions on marathon performance varies with age. To this end, we plotted the relationship between marathon times and age under different weather conditions. As shown in @fig-flag, as the risk of heat illness increases, marathon times tend to rise overall, and when the flag is red, the age range of individuals completing the marathon significantly narrows. Thus, it can be inferred that in extreme conditions, the increased demand for thermoregulation affects the energy expenditure in marathon running, requiring more time to complete the race. Additionally, @fig-flag suggests that older individuals, around 60 years old, may be the most affected by weather conditions, with the differences in marathon performance across different flags being more pronounced in this age group compared to other age groups.
+
+### Marathon Performances across Air Quality
+Similarly, we also explored the impact of air quality on marathon performance, as well as the differences in this effect across various age and gender groups. The upper part of @fig-AQI illustrates the relationship between AQI and performance, as well as the differences between men and women. We fitted the data using a cubic curve, with the shaded areas representing confidence intervals. It can be seen that the relationship between air quality and performance is quite complex: when the AQI is around 25 or greater than 70, marathon times tend to be longer, while the best performance occurs around an AQI of 45. This overall trend is evident in both male and female groups. Additionally, men appear to be more affected by air quality than women, as reflected by the greater variability in their marathon performance.
+
+To investigate differences across age groups, we fitted curves showing the relationship between age and marathon times under different AQI levels (lower part of @fig-AQI). While there is no clear clustering of the curves, marathon performance seems to worsen under high AQI conditions, with a greater degree of variation as age increases.
+```{r}
+#| label: fig-AQI
+#| fig-cap: Marathon performance under different environmental conditions
+plt1 <- df %>%
+  ggplot(aes(x = aqi, color = sex, fill = sex)) +
+  geom_smooth(aes(y = CR), method = "loess", se = TRUE, size = 1.2, alpha = 0.2) +  # Set alpha for transparent CIs
+  scale_color_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +  # Custom color for lines
+  scale_fill_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +   # Same color for CIs
+  labs(x = "AQI", y = "Best Time (%CR)") +
+  theme_minimal()
+plt2 <- ggplot(df, aes(x = age, y = CR, group = aqi, color = aqi)) +
+  geom_smooth(method = "loess", se = FALSE, size = 0.5, alpha=0.2) +  # Smooth curve with no confidence interval
+  scale_color_gradient2(low = "#5A78A8", mid="#E0E0E0", high = "#D65C5C", midpoint=50) +  # Gradient for Td: light for low Td, dark for high Td
+  labs(x = "Age", y = "Performance (%CR)", color = "AQI") +
+  theme_minimal()
+plt1 / plt2
+```
+### Finding The Most Effective Weather Parameter
+##### Identifying The Weather Parameters
+To identify the weather parameters (such as WBGT, flag conditions, temperature, etc.) that have the largest impact on marathon performance, a polynomial regression was applied. To avoid issues related to differing units when making comparisons, we first standardized each weather parameter. Additionally, considering the curvilinear relationships observed in previous exploratory data analysis (EDA), we decided to include cubic regression terms to fit the data. We then filtered out regression terms with significant predictive effects based on their p-values. Finally, we selected the weather parameter that had the largest impact on marathon performance based on their respective effect sizes.
+As shown in @tbl-coeff_weather, the predictive effects of $Td^2$, $Tw^3$, $rh^2$, $Tg^2$, $SR$, and $SR^2$ are significant (with $p \leq .01$). Among these, the first three terms have the largest effect sizes. Therefore, we can conclude that dry bulb temperature (Td), wet bulb temperature (Tw), and relative humidity (rh) have the greatest impacts on marathon performance.
+```{r}
+#| label: tbl-coeff_weather
+#| tbl-cap: Coefficients of each weather variables
+var_weather <- c("Td", "Tw", "Tg", "rh", "SR", "DP", "wind")
+data <- df %>% 
+  drop_na() %>%
+  mutate(across(var_weather, scale))
+form <- paste("CR ~", paste(paste0("poly(", var_weather, ", 3)"), 
+                            collapse = " + ")
+              )
+plymdl <- lm(form, data = data)
+tidy(plymdl) %>%
+  # Filter for significant effects (p-value < 0.05)
+  filter(p.value < 0.05 & term != "(Intercept)") %>%
+  # Select relevant columns and rename them
+  select(term, estimate, p.value) %>% 
+  mutate(across(c(estimate, p.value), ~ round(., 2)),
+         term = gsub("poly\\((\\w+), 3\\)(2)", "\\1^2", term),
+         term = gsub("poly\\((\\w+), 3\\)(3)", "\\1^3", term),
+         term = gsub("poly\\((\\w+), 3\\)(1)", "\\1", term),
+         term = gsub("poly\\((\\w+), 2\\)(2)", "\\1^2", term),
+         term = gsub("poly\\((\\w+), 2\\)(1)", "\\1", term)) %>%
+  kable() %>%
+  kable_styling(full_width=F, position="center")
+```
+##### Visualizing The Impact
+To further visualize the impact of these three weather parameters, we plotted the curve relationships between each parameter and marathon performance.
+As shown in @fig-Td, the relationship between Td and marathon performance remains complex and curved. Individuals have the shortest average completion times when Td is around 10, after which the times increase with either higher or lower Td, and the variation is greater for women than for men. Additionally, Td affects the relationship between age and marathon performance to varying degrees. Individuals perform better at moderate Td levels, while their performance declines at higher Td levels. Older adults have a weaker tolerance for such extreme conditions, resulting in a more pronounced decrease in performance.
+```{r}
+#| label: fig-Td
+#| tbl-cap: Effects of Dry Bulb Temperature
+plt1 <- df %>%
+  ggplot(aes(x = Td, color = sex, fill = sex)) +
+  geom_smooth(aes(y = CR), method = "loess", se = TRUE, size = 1.2, alpha = 0.2) +  # Set alpha for transparent CIs
+  scale_color_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +  # Custom color for lines
+  scale_fill_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +   # Same color for CIs
+  labs(x = "Dry Bulb Temperature (C)", y = "Best Time (%CR)") +
+  theme_minimal()
+plt2 <- ggplot(df, aes(x = age, y = CR, group = Td, color = Td)) +
+  geom_smooth(method = "loess", se = FALSE, size = 0.5, alpha=0.2) +  # Smooth curve with no confidence interval
+  scale_color_gradient2(low = "#5A78A8", mid="#E0E0E0", high = "#D65C5C", midpoint=15) +  # Gradient for Td: light for low Td, dark for high Td
+  labs(x = "Age", y = "Performance (%CR)", color = "Temperature (Td)") +
+  theme_minimal()
+plt1 / plt2
+```
+
+Same things happen with Tw (wet bulb temperature).Individuals perform the best when Tw is around $5-7.5$, and female is less adaptive than men across Tw (@fig-Tw). Similarly, individuals tend to achieve better performance at moderate Tw levels, but their performance deteriorates as Td levels increase. Older adults exhibit a reduced ability to tolerate these extreme conditions, leading to a more significant decline in their performance.
+
+```{r}
+#| label: fig-Tw
+#| tbl-cap: Effects of Wet Bulb Temperature
+plt1 <- df %>%
+  ggplot(aes(x = Tw, color = sex, fill = sex)) +
+  geom_smooth(aes(y = CR), method = "loess", se = TRUE, size = 1.2, alpha = 0.2) +  # Set alpha for transparent CIs
+  scale_color_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +  # Custom color for lines
+  scale_fill_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +   # Same color for CIs
+  labs(x = "Wet Bulb Temperature (C)", y = "Best Time (%CR)") +
+  theme_minimal()
+plt2 <- ggplot(df, aes(x = age, y = CR, group = Tw, color = Tw)) +
+  geom_smooth(method = "loess", se = FALSE, size = 0.5, alpha=0.2) +  # Smooth curve with no confidence interval
+  scale_color_gradient2(low = "#5A78A8", mid="#E0E0E0", high = "#D65C5C", midpoint=10) +  # Gradient for Td: light for low Td, dark for high Td
+  labs(x = "Age", y = "Performance (%CR)", color = "Temperature (Tw)") +
+  theme_minimal()
+plt1 / plt2
+```
+
+As for relative humidity, its relationship with marathon performances presents a beautiful curve, whose minimum at around 25% while maximum at around 0% or 60% (@fig-rh). Men and women show no significant differences on their adaptability. Compared to younger or middle-aged individuals, older adults still exhibit significant differences in marathon performance across different relative humidity environments.
+
+```{r}
+#| label: fig-rh
+#| tbl-cap: Effects of Relative Humidity
+plt1 <- df %>%
+  ggplot(aes(x = rh, color = sex, fill = sex)) +
+  geom_smooth(aes(y = CR), method = "loess", se = TRUE, size = 1.2, alpha = 0.2) +  # Set alpha for transparent CIs
+  scale_color_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +  # Custom color for lines
+  scale_fill_manual(values = c("Male" = "#5A78A8", "Female" = "#D65C5C")) +   # Same color for CIs
+  labs(x = "Relative humidity(%)", y = "Best Time (%CR)") +
+  theme_minimal()
+plt2 <- ggplot(df, aes(x = age, y = CR, group = rh, color = rh)) +
+  geom_smooth(method = "loess", se = FALSE, size = 0.5, alpha=0.2) +  # Smooth curve with no confidence interval
+  scale_color_gradient2(low = "#5A78A8", mid="#E0E0E0", high = "#D65C5C", midpoint=50) +  # Gradient for Td: light for low Td, dark for high Td
+  labs(x = "Age", y = "Performance (%CR)", color = "Relative humidity(%)") +
+  theme_minimal()
+plt1 / plt2
+```
+# Conclusion
+Slowing would be more pronounced with high WBGT in older individuals compared to younger individuals, and similar trends would be observed in both men and women. Individuals in different air quality environments would also exhibit similar performance. Additionally, dry bulb temperature, wet bulb temperature, and relative humidity have relatively significant impacts on marathon performance.
+
+### References
+::: {#refs}
+:::
+# Code Appendix
+
+```{r ref.label = knitr::all_labels()}
+#| echo: true
+#| eval: false
+```
