@@ -9,6 +9,10 @@ To identify potential predictors of smoking cessation, we performed variable sel
 ### Results
 Our findings suggest that several baseline variables are important in influencing smoking cessation outcomes. Lasso regression identified nicotine metabolism as a moderator of pharmacotherapy effects, while stepwise regression revealed that education moderates the effects of psychotherapy. In terms of predictors, stepwise regression identified pharmacotherapy use, non-Hispanic white ethnicity, nicotine metabolism, and smoking habits upon waking as significant, while lasso regression detected only the latter behavior as a key predictor.
 
+![](project2_files/figure-html/fig-cor-1.png)
+
+![fig-roc_main-1](project2_files/figure-html/fig-roc_main-1.png)
+
 ## Files
 ### report
 `report.Rmd`: The Rmarkdown version of the Regression Analysis report, which includes both written text interpretations and raw code used in the analysis. 
