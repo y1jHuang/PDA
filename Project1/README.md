@@ -10,7 +10,7 @@ We began with exploratory data analysis (EDA) to examine the relationships betwe
 
 We used linear regression to assess the impact of weather variables and air quality on marathon completion times. The dependent variable was completion time, and the independent variables included weather conditions, age, and sex, along with interaction terms. Stepwise selection was applied to refine the model.
 
-### Results
+## Results
 We found that while male and female runners performed differently, with men finishing faster, weather conditions affected both genders similarly, suggesting physiological differences rather than sensitivity to weather. Weather had varying effects across age groups, with WBGT having the strongest impact on completion times, supporting previous findings on aerobic performance in hot conditions. Relative humidity and solar radiation also affected performance, while wind speed showed a unique age-dependent effect. Older runners seemed more sensitive to wind conditions due to reduced thermoregulatory and cardiovascular function.
 
 The analysis supports the concept of a “prescriptive zone” for temperature regulation during exercise, where performance declines when environmental conditions exceed this zone. However, limitations include the exclusion of factors like training status and health, and the small sample sizes in the youngest and oldest age groups. Future research should incorporate these factors and ensure more balanced representation across age groups.
