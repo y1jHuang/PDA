@@ -15,9 +15,9 @@ Our findings suggest that several baseline variables are important in influencin
 
 ## Files
 ### report
-`report.Rmd`: The Rmarkdown version of the Regression Analysis report, which includes both written text interpretations and raw code used in the analysis. 
+`project2.Rmd`: The Rmarkdown version of the Regression Analysis report, which includes both written text interpretations and raw code used in the analysis. 
 
-`report.pdf`: The PDF version of the Regression Analysis report, which includes both written text interpretations and a Code Applendix with the code used in the analysis. 
+`project2.pdf`: The PDF version of the Regression Analysis report, which includes both written text interpretations and a Code Applendix with the code used in the analysis. 
 
 
 ## Dependencies
