@@ -1,0 +1,2499 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Yingjie Huang">
+
+<title>Exploring the Relationship between Environmental Conditions and Marathon Performances</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="project1_files/libs/clipboard/clipboard.min.js"></script>
+<script src="project1_files/libs/quarto-html/quarto.js"></script>
+<script src="project1_files/libs/quarto-html/popper.min.js"></script>
+<script src="project1_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="project1_files/libs/quarto-html/anchor.min.js"></script>
+<link href="project1_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="project1_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="project1_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="project1_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="project1_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="project1_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="project1_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Exploring the Relationship between Environmental Conditions and Marathon Performances</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Yingjie Huang </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="abstract" class="level1">
+<h1>Abstract</h1>
+<p>Past research revealed significant differences in marathon performance influenced by gender, age. Meanwhile, age may influence thermoregularization as well. We therefore designated to explore the impact of environmental conditions on marathon performances, including weather and air quality. Exploratory data analysis and linear regression were employed to verify the influence of weather conditions and air quality on marathon performances. We also identified relative humidity and WBGT may have have the largest impact on marathon performance.</p>
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>The factors influencing marathon performance have always been a topic of interest, and existing research has confirmed the impact of weather conditions on performance. For instance, increasing WBGT has been shown to slow marathon performance <span class="citation" data-cites="Ely2007 Ely2010">(<a href="#ref-Ely2007" role="doc-biblioref">M. R. Ely et al. 2007</a>; <a href="#ref-Ely2010" role="doc-biblioref">B. R. Ely et al. 2010</a>)</span>, and the effects of weather are less evident in female runners. Additionally, marathon performance exhibits differences related to age and gender: men are more likely than women to experience a slowdown during a marathon, and older runners tend to have less pace variance compared to younger runners. Moreover, masters men and women are negatively impacted by higher temperatures and humidity during the New York City marathon. Endurance performance degrades with increasing environmental temperature, and this decline in performance associated with warmer temperatures is magnified in longer-distance events such as the marathon (42.2 km). Older adults also face thermoregulatory challenges that impair their ability to dissipate heat, further exacerbating the impact of elevated temperatures. Lastly, there are well-documented sex differences in endurance performance <span class="citation" data-cites="Besson2022">(<a href="#ref-Besson2022" role="doc-biblioref">Besson et al. 2022</a>)</span> and in the physiological processes related to thermoregulation. Additionally, research has indicated the impact of age on thermoregulation <span class="citation" data-cites="Yanovich2020">(<a href="#ref-Yanovich2020" role="doc-biblioref">Yanovich, Ketko, and Charkoudian 2020</a>)</span>, highlighting a reduced ability to tolerate heat stress in older individuals <span class="citation" data-cites="Kenney2003">(<a href="#ref-Kenney2003" role="doc-biblioref">Kenney and Munce 2003</a>)</span>. However, the relationship between marathon performance and environmental conditions, particularly air quality, as well as the differences based on age and gender, remains to be explored.</p>
+<p>Therefore, this study aims to confirm the relationships between weather conditions, air quality, and marathon performance, while further identifying the weather parameters that have the greatest impact on performance. We hypothesize that the slowing of performance would be more pronounced with high WBGT or AQI in older individuals compared to younger ones, and similar trends would be observed in both men and women. To achieve our goals, we will employ exploratory data analysis and linear regression.</p>
+</section>
+<section id="data-collection" class="level1">
+<h1>Data Collection</h1>
+<p>The current study uses the data collected from marathon race results for Boston, Chicago, New York, Twin Cities, Grandma’s Marathons for 17 to 24 years, 1993-2016. To evaluate marathon performance, we extracted fastest finishing time among men and women at each year of age, compared with the course record (%CR). The data also attaches parameters that recorded local weather conditions, including Td(dry bulb temperature in Celsius), Tw(wet bulb temperature in Celsius), %rh(percent relative humidity) and so on. Wet bulb globe temperature (WGBT) is calculated by weighting these weather parameters and is regarded as a general measurement that integrate all of weather information. Additionally, another data set records local air quality by AQI of each race, which is regarded as a reflection of environmental conditions as well.</p>
+</section>
+<section id="exploratory-data-analysis" class="level1">
+<h1>Exploratory Data Analysis</h1>
+<section id="marathon-data" class="level2">
+<h2 class="anchored" data-anchor-id="marathon-data">Marathon data</h2>
+<p>Next, we examined the marathon dataset, which includes participants’ age, sex, and course records. The dataset comprises a total of 11,564 observations, with records from the Boston, Chicago, New York, Twin Cities, and Grandma’s marathons. Participants’ ages range mostly between 14 and 90, with a median age of 46, and the number of male and female participants is roughly equal. There are no significant differences in marathon performance across the different events, and all the data is complete.</p>
+<div class="cell">
+<div id="tbl-summary_marathon" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary_marathon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Summary table of marathon data
+</figcaption>
+<div aria-describedby="tbl-summary_marathon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="dgmjywdlzr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dgmjywdlzr table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#dgmjywdlzr thead, #dgmjywdlzr tbody, #dgmjywdlzr tfoot, #dgmjywdlzr tr, #dgmjywdlzr td, #dgmjywdlzr th {
+  border-style: none;
+}
+
+#dgmjywdlzr p {
+  margin: 0;
+  padding: 0;
+}
+
+#dgmjywdlzr .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#dgmjywdlzr .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#dgmjywdlzr .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#dgmjywdlzr .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#dgmjywdlzr .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#dgmjywdlzr .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#dgmjywdlzr .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#dgmjywdlzr .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#dgmjywdlzr .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#dgmjywdlzr .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#dgmjywdlzr .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#dgmjywdlzr .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dgmjywdlzr .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dgmjywdlzr .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dgmjywdlzr .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dgmjywdlzr .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#dgmjywdlzr .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#dgmjywdlzr .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#dgmjywdlzr .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dgmjywdlzr .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#dgmjywdlzr .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dgmjywdlzr .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#dgmjywdlzr .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dgmjywdlzr .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dgmjywdlzr .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dgmjywdlzr .gt_left {
+  text-align: left;
+}
+
+#dgmjywdlzr .gt_center {
+  text-align: center;
+}
+
+#dgmjywdlzr .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dgmjywdlzr .gt_font_normal {
+  font-weight: normal;
+}
+
+#dgmjywdlzr .gt_font_bold {
+  font-weight: bold;
+}
+
+#dgmjywdlzr .gt_font_italic {
+  font-style: italic;
+}
+
+#dgmjywdlzr .gt_super {
+  font-size: 65%;
+}
+
+#dgmjywdlzr .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#dgmjywdlzr .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#dgmjywdlzr .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#dgmjywdlzr .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#dgmjywdlzr .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#dgmjywdlzr .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#dgmjywdlzr .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#dgmjywdlzr .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#dgmjywdlzr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="<div data-qmd-base64=&quot;KipDaGFyYWN0ZXJpc3RpYyoq&quot;><div class='gt_from_md'><p><strong>Characteristic</strong></p>
+</div></div>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><p><strong>Characteristic</strong></p></th>
+<th id="<div data-qmd-base64=&quot;KipPdmVyYWxsKiogIApOID0gMTEsNTY0&quot;><div class='gt_from_md'><p><strong>Overall</strong><br />
+N = 11,564</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Overall</strong><br>
+N = 11,564</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipCb3N0b24qKiAgCk4gPSAyLDA4OA==&quot;><div class='gt_from_md'><p><strong>Boston</strong><br />
+N = 2,088</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Boston</strong><br>
+N = 2,088</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipDaGljYWdvKiogIApOID0gMiw1NTM=&quot;><div class='gt_from_md'><p><strong>Chicago</strong><br />
+N = 2,553</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Chicago</strong><br>
+N = 2,553</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipHcmFuZG1hcyoqICAKTiA9IDIsMDAw&quot;><div class='gt_from_md'><p><strong>Grandmas</strong><br />
+N = 2,000</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Grandmas</strong><br>
+N = 2,000</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipOWUMqKiAgCk4gPSAyLDkzMA==&quot;><div class='gt_from_md'><p><strong>NYC</strong><br />
+N = 2,930</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>NYC</strong><br>
+N = 2,930</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipUd2luIENpdGllcyoqICAKTiA9IDEsOTkz&quot;><div class='gt_from_md'><p><strong>Twin Cities</strong><br />
+N = 1,993</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Twin Cities</strong><br>
+N = 1,993</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Sex</td>
+<td class="gt_row gt_center" headers="stat_0"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_3"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_4"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_5"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Female</td>
+<td class="gt_row gt_center" headers="stat_0">5,452/11564 (47%)</td>
+<td class="gt_row gt_center" headers="stat_1">984/2088 (47%)</td>
+<td class="gt_row gt_center" headers="stat_2">1,210/2553 (47%)</td>
+<td class="gt_row gt_center" headers="stat_3">934/2000 (47%)</td>
+<td class="gt_row gt_center" headers="stat_4">1,402/2930 (48%)</td>
+<td class="gt_row gt_center" headers="stat_5">922/1993 (46%)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Male</td>
+<td class="gt_row gt_center" headers="stat_0">6,112/11564 (53%)</td>
+<td class="gt_row gt_center" headers="stat_1">1,104/2088 (53%)</td>
+<td class="gt_row gt_center" headers="stat_2">1,343/2553 (53%)</td>
+<td class="gt_row gt_center" headers="stat_3">1,066/2000 (53%)</td>
+<td class="gt_row gt_center" headers="stat_4">1,528/2930 (52%)</td>
+<td class="gt_row gt_center" headers="stat_5">1,071/1993 (54%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Age</td>
+<td class="gt_row gt_center" headers="stat_0">14 - 91 (46)</td>
+<td class="gt_row gt_center" headers="stat_1">18 - 87 (47)</td>
+<td class="gt_row gt_center" headers="stat_2">14 - 85 (46)</td>
+<td class="gt_row gt_center" headers="stat_3">14 - 86 (44)</td>
+<td class="gt_row gt_center" headers="stat_4">18 - 91 (49)</td>
+<td class="gt_row gt_center" headers="stat_5">14 - 85 (44)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Course Record(h)</td>
+<td class="gt_row gt_center" headers="stat_0">3.35 (1.02)</td>
+<td class="gt_row gt_center" headers="stat_1">3.13 (0.77)</td>
+<td class="gt_row gt_center" headers="stat_2">3.33 (1.04)</td>
+<td class="gt_row gt_center" headers="stat_3">3.39 (0.93)</td>
+<td class="gt_row gt_center" headers="stat_4">3.49 (1.27)</td>
+<td class="gt_row gt_center" headers="stat_5">3.35 (0.85)</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="7" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span>
+<p>n/N (%); Min - Max (Median); Mean (SD)</p></td>
+</tr>
+<tr class="odd">
+<td colspan="7" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span>
+<p>Mean (SD), Min - Max are reported for continuous variables. Count (%) for categorical variables.</p></td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="environmental-data" class="level2">
+<h2 class="anchored" data-anchor-id="environmental-data">Environmental Data</h2>
+<p>This dataset includes environmental data from five marathon races held between the 1990s and the 2010s. The variables encompass dry bulb temperature, wet bulb temperature, relative humidity, black globe temperature, solar radiation, dew point, wind, wet bulb globe temperature (WBGT), and air quality index (AQI). WBGT is a composite weather indicator calculated based on dry bulb temperature, wet bulb temperature, and relative humidity, while AQI reflects the air quality for each race.</p>
+<p>On average, Twin Cities has the best air quality, while Boston shows the poorest. However, the differences in air quality among cities are not statistically significant. Observing the distribution of meteorological flags across different levels reveals that most marathon races were held under “white” or “green” flag conditions, with fewer races occurring under “yellow” or “red” conditions and none under “black” conditions. This may be because extreme weather conditions prompt race organizers to cancel or postpone events.</p>
+<p>Overall, the environmental data has minimal missingness, with only a few cities lacking data for specific years. For further analysis, these missing cases could be addressed by excluding them directly to simplify the process.</p>
+<div class="cell">
+<div id="tbl-summary_weather" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary_weather-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Summary table of environmental data
+</figcaption>
+<div aria-describedby="tbl-summary_weather-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="xhauuoeuia" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xhauuoeuia table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#xhauuoeuia thead, #xhauuoeuia tbody, #xhauuoeuia tfoot, #xhauuoeuia tr, #xhauuoeuia td, #xhauuoeuia th {
+  border-style: none;
+}
+
+#xhauuoeuia p {
+  margin: 0;
+  padding: 0;
+}
+
+#xhauuoeuia .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#xhauuoeuia .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#xhauuoeuia .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#xhauuoeuia .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#xhauuoeuia .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#xhauuoeuia .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#xhauuoeuia .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#xhauuoeuia .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#xhauuoeuia .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#xhauuoeuia .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#xhauuoeuia .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#xhauuoeuia .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#xhauuoeuia .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#xhauuoeuia .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#xhauuoeuia .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xhauuoeuia .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#xhauuoeuia .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#xhauuoeuia .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#xhauuoeuia .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xhauuoeuia .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#xhauuoeuia .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xhauuoeuia .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#xhauuoeuia .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xhauuoeuia .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xhauuoeuia .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xhauuoeuia .gt_left {
+  text-align: left;
+}
+
+#xhauuoeuia .gt_center {
+  text-align: center;
+}
+
+#xhauuoeuia .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#xhauuoeuia .gt_font_normal {
+  font-weight: normal;
+}
+
+#xhauuoeuia .gt_font_bold {
+  font-weight: bold;
+}
+
+#xhauuoeuia .gt_font_italic {
+  font-style: italic;
+}
+
+#xhauuoeuia .gt_super {
+  font-size: 65%;
+}
+
+#xhauuoeuia .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#xhauuoeuia .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#xhauuoeuia .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#xhauuoeuia .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#xhauuoeuia .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#xhauuoeuia .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#xhauuoeuia .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#xhauuoeuia .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#xhauuoeuia div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header gt_col_headings">
+<th id="<div data-qmd-base64=&quot;KipDaGFyYWN0ZXJpc3RpYyoq&quot;><div class='gt_from_md'><p><strong>Characteristic</strong></p>
+</div></div>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><p><strong>Characteristic</strong></p></th>
+<th id="<div data-qmd-base64=&quot;KipPdmVyYWxsKiogIApOID0gOTY=&quot;><div class='gt_from_md'><p><strong>Overall</strong><br />
+N = 96</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Overall</strong><br>
+N = 96</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipCb3N0b24qKiAgCk4gPSAxOA==&quot;><div class='gt_from_md'><p><strong>Boston</strong><br />
+N = 18</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Boston</strong><br>
+N = 18</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipDaGljYWdvKiogIApOID0gMjE=&quot;><div class='gt_from_md'><p><strong>Chicago</strong><br />
+N = 21</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Chicago</strong><br>
+N = 21</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipHcmFuZG1hcyoqICAKTiA9IDE3&quot;><div class='gt_from_md'><p><strong>Grandmas</strong><br />
+N = 17</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Grandmas</strong><br>
+N = 17</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipOWUMqKiAgCk4gPSAyMw==&quot;><div class='gt_from_md'><p><strong>NYC</strong><br />
+N = 23</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>NYC</strong><br>
+N = 23</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+<th id="<div data-qmd-base64=&quot;KipUd2luIENpdGllcyoqICAKTiA9IDE3&quot;><div class='gt_from_md'><p><strong>Twin Cities</strong><br />
+N = 17</p>
+</div></div><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;&quot;><sup>2</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><p><strong>Twin Cities</strong><br>
+N = 17</p>
+<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Year</td>
+<td class="gt_row gt_center" headers="stat_0">1,993 - 2,016</td>
+<td class="gt_row gt_center" headers="stat_1">1,998 - 2,016</td>
+<td class="gt_row gt_center" headers="stat_2">1,996 - 2,016</td>
+<td class="gt_row gt_center" headers="stat_3">2,000 - 2,016</td>
+<td class="gt_row gt_center" headers="stat_4">1,993 - 2,016</td>
+<td class="gt_row gt_center" headers="stat_5">2,000 - 2,016</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Flag</td>
+<td class="gt_row gt_center" headers="stat_0"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_1"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_2"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_3"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_4"><br>
+</td>
+<td class="gt_row gt_center" headers="stat_5"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;White</td>
+<td class="gt_row gt_center" headers="stat_0">31/92 (34%)</td>
+<td class="gt_row gt_center" headers="stat_1">9/18 (50%)</td>
+<td class="gt_row gt_center" headers="stat_2">6/20 (30%)</td>
+<td class="gt_row gt_center" headers="stat_3">0/16 (0%)</td>
+<td class="gt_row gt_center" headers="stat_4">11/22 (50%)</td>
+<td class="gt_row gt_center" headers="stat_5">5/16 (31%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Green</td>
+<td class="gt_row gt_center" headers="stat_0">39/92 (42%)</td>
+<td class="gt_row gt_center" headers="stat_1">7/18 (39%)</td>
+<td class="gt_row gt_center" headers="stat_2">12/20 (60%)</td>
+<td class="gt_row gt_center" headers="stat_3">6/16 (38%)</td>
+<td class="gt_row gt_center" headers="stat_4">7/22 (32%)</td>
+<td class="gt_row gt_center" headers="stat_5">7/16 (44%)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Yellow</td>
+<td class="gt_row gt_center" headers="stat_0">17/92 (18%)</td>
+<td class="gt_row gt_center" headers="stat_1">1/18 (5.6%)</td>
+<td class="gt_row gt_center" headers="stat_2">1/20 (5.0%)</td>
+<td class="gt_row gt_center" headers="stat_3">8/16 (50%)</td>
+<td class="gt_row gt_center" headers="stat_4">4/22 (18%)</td>
+<td class="gt_row gt_center" headers="stat_5">3/16 (19%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Red</td>
+<td class="gt_row gt_center" headers="stat_0">5/92 (5.4%)</td>
+<td class="gt_row gt_center" headers="stat_1">1/18 (5.6%)</td>
+<td class="gt_row gt_center" headers="stat_2">1/20 (5.0%)</td>
+<td class="gt_row gt_center" headers="stat_3">2/16 (13%)</td>
+<td class="gt_row gt_center" headers="stat_4">0/22 (0%)</td>
+<td class="gt_row gt_center" headers="stat_5">1/16 (6.3%)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Black</td>
+<td class="gt_row gt_center" headers="stat_0">0/92 (0%)</td>
+<td class="gt_row gt_center" headers="stat_1">0/18 (0%)</td>
+<td class="gt_row gt_center" headers="stat_2">0/20 (0%)</td>
+<td class="gt_row gt_center" headers="stat_3">0/16 (0%)</td>
+<td class="gt_row gt_center" headers="stat_4">0/22 (0%)</td>
+<td class="gt_row gt_center" headers="stat_5">0/16 (0%)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Dry bulb temperature</td>
+<td class="gt_row gt_center" headers="stat_0">13.35 (5.86)</td>
+<td class="gt_row gt_center" headers="stat_1">11.59 (6.02)</td>
+<td class="gt_row gt_center" headers="stat_2">12.43 (6.23)</td>
+<td class="gt_row gt_center" headers="stat_3">18.86 (3.42)</td>
+<td class="gt_row gt_center" headers="stat_4">11.73 (4.80)</td>
+<td class="gt_row gt_center" headers="stat_5">13.19 (5.73)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Wet bulb temperature</td>
+<td class="gt_row gt_center" headers="stat_0">9.46 (5.41)</td>
+<td class="gt_row gt_center" headers="stat_1">7.56 (3.89)</td>
+<td class="gt_row gt_center" headers="stat_2">8.56 (5.85)</td>
+<td class="gt_row gt_center" headers="stat_3">14.90 (2.52)</td>
+<td class="gt_row gt_center" headers="stat_4">7.57 (5.11)</td>
+<td class="gt_row gt_center" headers="stat_5">9.90 (5.61)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Relative humidity</td>
+<td class="gt_row gt_center" headers="stat_0">42.11 (32.32)</td>
+<td class="gt_row gt_center" headers="stat_1">34.90 (35.24)</td>
+<td class="gt_row gt_center" headers="stat_2">60.57 (10.75)</td>
+<td class="gt_row gt_center" headers="stat_3">48.85 (35.52)</td>
+<td class="gt_row gt_center" headers="stat_4">26.84 (31.16)</td>
+<td class="gt_row gt_center" headers="stat_5">41.37 (35.41)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Black globe temperature</td>
+<td class="gt_row gt_center" headers="stat_0">25.02 (7.77)</td>
+<td class="gt_row gt_center" headers="stat_1">24.18 (8.54)</td>
+<td class="gt_row gt_center" headers="stat_2">24.55 (6.45)</td>
+<td class="gt_row gt_center" headers="stat_3">31.60 (8.13)</td>
+<td class="gt_row gt_center" headers="stat_4">21.37 (6.10)</td>
+<td class="gt_row gt_center" headers="stat_5">25.01 (6.76)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Solar radiation</td>
+<td class="gt_row gt_center" headers="stat_0">517.88 (189.77)</td>
+<td class="gt_row gt_center" headers="stat_1">653.95 (191.28)</td>
+<td class="gt_row gt_center" headers="stat_2">459.71 (96.34)</td>
+<td class="gt_row gt_center" headers="stat_3">679.29 (195.28)</td>
+<td class="gt_row gt_center" headers="stat_4">401.18 (133.99)</td>
+<td class="gt_row gt_center" headers="stat_5">436.53 (142.93)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Dew point</td>
+<td class="gt_row gt_center" headers="stat_0">5.53 (6.97)</td>
+<td class="gt_row gt_center" headers="stat_1">3.34 (4.55)</td>
+<td class="gt_row gt_center" headers="stat_2">4.69 (7.07)</td>
+<td class="gt_row gt_center" headers="stat_3">12.42 (3.27)</td>
+<td class="gt_row gt_center" headers="stat_4">2.73 (7.17)</td>
+<td class="gt_row gt_center" headers="stat_5">6.02 (7.51)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Wind</td>
+<td class="gt_row gt_center" headers="stat_0">9.93 (4.08)</td>
+<td class="gt_row gt_center" headers="stat_1">11.98 (4.57)</td>
+<td class="gt_row gt_center" headers="stat_2">8.17 (3.29)</td>
+<td class="gt_row gt_center" headers="stat_3">9.19 (2.95)</td>
+<td class="gt_row gt_center" headers="stat_4">11.22 (4.68)</td>
+<td class="gt_row gt_center" headers="stat_5">8.81 (3.30)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Wet bulb globe temperature</td>
+<td class="gt_row gt_center" headers="stat_0">12.96 (5.62)</td>
+<td class="gt_row gt_center" headers="stat_1">11.29 (4.61)</td>
+<td class="gt_row gt_center" headers="stat_2">12.14 (5.92)</td>
+<td class="gt_row gt_center" headers="stat_3">18.64 (3.32)</td>
+<td class="gt_row gt_center" headers="stat_4">10.74 (5.04)</td>
+<td class="gt_row gt_center" headers="stat_5">13.25 (5.56)</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Unknown</td>
+<td class="gt_row gt_center" headers="stat_0">4</td>
+<td class="gt_row gt_center" headers="stat_1">0</td>
+<td class="gt_row gt_center" headers="stat_2">1</td>
+<td class="gt_row gt_center" headers="stat_3">1</td>
+<td class="gt_row gt_center" headers="stat_4">1</td>
+<td class="gt_row gt_center" headers="stat_5">1</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Air Quality Index</td>
+<td class="gt_row gt_center" headers="stat_0">36.15 (14.70)</td>
+<td class="gt_row gt_center" headers="stat_1">42.25 (15.53)</td>
+<td class="gt_row gt_center" headers="stat_2">38.74 (12.78)</td>
+<td class="gt_row gt_center" headers="stat_3">37.24 (16.05)</td>
+<td class="gt_row gt_center" headers="stat_4">32.47 (14.19)</td>
+<td class="gt_row gt_center" headers="stat_5">30.39 (13.52)</td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="even">
+<td colspan="7" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>1</sup></span>
+<p>Min - Max; n/N (%); Mean (SD)</p></td>
+</tr>
+<tr class="odd">
+<td colspan="7" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height: 0;"><sup>2</sup></span>
+<p>Mean (SD), Min - Max are reported for continuous variables. Count (%) for categorical variables.</p></td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="correlation-between-environmental-data" class="level2">
+<h2 class="anchored" data-anchor-id="correlation-between-environmental-data">Correlation between environmental data</h2>
+<p>We analyzed the correlation among weather variables and found, as shown in <a href="#fig-corr" class="quarto-xref">Figure&nbsp;1</a>, that dew point (<code>DP</code>) is highly correlated with <code>WBGT</code>, making it suitable for exclusion from the analysis. Furthermore, since <code>WBGT</code> is a composite index that incorporates the effects of dry bulb temperature (<code>Td</code>), wet bulb temperature (<code>Tw</code>), and black globe temperature (Tg), these variables are also highly correlated with <code>WBGT</code> and can be excluded. In contrast, the remaining variables, including relative humidity (<code>rh</code>), solar radiation (<code>SR</code>), and <code>wind</code>, show lower correlations with one another and are retained for further analysis.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-corr" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="project1_files/figure-html/fig-corr-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-corr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Correlation map between weather variables
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="effects-of-sex-and-age-on-marathon-performance" class="level2">
+<h2 class="anchored" data-anchor-id="effects-of-sex-and-age-on-marathon-performance">Effects of sex and age on marathon performance</h2>
+<p>To explore the impact of gender and age on marathon performance, we analyzed race data and visualized performance across different age groups and genders. To compare the performance between male and female, we first converted course records from percentage unit to seconds unit, then used LOESS (Locally Estimated Scatterplot Smoothing) method in R to fit a smooth curve in scatterplots. Similar approaches were utilized in other exploratory analysis. As shown in <a href="#fig-age_gender" class="quarto-xref">Figure&nbsp;2</a>, marathon performance follows a J-shaped curve with age: it improves steadily, peaking around 35 years old, and then declines as physical abilities deteriorate with aging. At any age, men, on average, outperform women in marathon performance. However, the gender difference varies with age. Data from the Chicago, NYC, and Grandma’s marathons reveal that this difference peaks around age 60 but narrows both before and after this point. In contrast, data from the Boston and Twin Cities marathons show that the gender gap does not return to similar levels as age increases. Instead, it either remains constant or continues to widen. This complex relationship warrants further investigation.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-age_gender" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-age_gender-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="project1_files/figure-html/fig-age_gender-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-age_gender-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Effects of age and gender on marathon performance across races
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="effects-of-weather-conditions-on-marathon-performances" class="level2">
+<h2 class="anchored" data-anchor-id="effects-of-weather-conditions-on-marathon-performances">Effects of Weather Conditions on marathon performances</h2>
+<section id="wbgt-impacts" class="level3">
+<h3 class="anchored" data-anchor-id="wbgt-impacts">WBGT impacts</h3>
+<p>Next, we turn our attention to the effect of WBGT on marathon performance. WBGT is a composite index that combines the effects of dry bulb temperature (Td), wet bulb temperature (Tw), and black globe temperature (Tg). Conceptually, WBGT serves as a measure to estimate the combined impact of temperature, humidity, wind speed, and solar radiation on humans. It is widely used to assess heat stress during physical activities in outdoor environments, such as marathons. Higher WBGT levels indicate more stressful conditions, suggesting that as WBGT increases, it becomes more difficult for runners to complete a marathon efficiently.</p>
+<p>To examine this relationship, we plotted the effect of WBGT on marathon completion time, stratified by sex. Rather than using WBGT as a continuous measure, we employed the “Flag” column as a proxy for WBGT levels. The “Flag” column is a categorical variable indicating WBGT levels, with White representing the lowest stress level and Black representing the highest. As depicted in <a href="#fig-flag" class="quarto-xref">Figure&nbsp;3</a>, completion times increase progressively with higher WBGT levels, supporting the hypothesis that heat stress significantly hinders performance.</p>
+<p>Interestingly, the analysis revealed a gender difference in adaptation to extreme conditions. Men appear to be more affected by extreme WBGT levels than women, particularly under red-level WBGT conditions. The increase in completion time for men is noticeably greater than for women, especially in the 35–65 age group. This suggests that men in this age range may be more vulnerable to the adverse effects of extreme weather, highlighting the need for further investigation into the underlying causes of these differences.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-flag" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-flag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="project1_files/figure-html/fig-flag-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flag-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Marathon performance under different weather conditions
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="relative-humidity-impacts" class="level3">
+<h3 class="anchored" data-anchor-id="relative-humidity-impacts">Relative humidity impacts</h3>
+<p>We also explored the impact of relative humidity (rh) on marathon performance. As shown in <a href="#fig-rh" class="quarto-xref">Figure&nbsp;4</a>, relative humidity within the 0–50 range appears to have some influence on marathon performance, with the effect being most pronounced among older adults aged 80 and above. For this age group, marathon completion time is fastest when relative humidity is around 25, while both excessively high and low humidity levels increase completion time. In comparison, other age groups are less affected by relative humidity, with their performance curves remaining relatively flat. This discrepancy may stem from older runners having reduced metabolic efficiency, meaning that humidity levels could indirectly affect energy circulation during running, thereby impacting completion time. Alternatively, this trend might reflect the small sample size for this age group, where a few outliers could disproportionately influence the overall pattern.</p>
+<p>Additionally, the effect of relative humidity differs little between men and women. They all tend to have a cubic relationship with relative humidity.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rh" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="project1_files/figure-html/fig-rh-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Marathon performance under different relative humidity levels
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="wind-impacts" class="level3">
+<h3 class="anchored" data-anchor-id="wind-impacts">Wind impacts</h3>
+<p>Similarly, we examined the effect of wind speed on marathon performance. As shown in <a href="#fig-wind" class="quarto-xref">Figure&nbsp;5</a>, wind speed has a relatively small impact on marathon performance, with performance remaining largely unchanged across different wind levels for all age groups. Additionally, there is little difference in performance between men and women at varying wind speeds, indicating that wind speed does not have a significant differential impact on marathon performance based on gender.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-wind" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-wind-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="project1_files/figure-html/fig-wind-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wind-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Marathon performance under different wind speeds
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="solar-radiation-impacts" class="level3">
+<h3 class="anchored" data-anchor-id="solar-radiation-impacts">Solar Radiation Impacts</h3>
+<p>We also explored the impact of solar radiation (SR) on marathon performance. As shown in <a href="#fig-solar" class="quarto-xref">Figure&nbsp;6</a>, for older individuals, marathon performance tends to improve with higher solar radiation. In contrast, the effect is less noticeable in younger age groups, where completion times remain relatively stable across varying levels of solar radiation. This finding is somewhat counterintuitive, and we suspect that the small sample size in the older age groups may have contributed to the observed variability. Furthermore, the effect of solar radiation shows significant differences between genders. This suggests that the impact of relative humidity on marathon performance varies by gender, potentially reflecting differences in environmental adaptability between men and women.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-solar" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-solar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="project1_files/figure-html/fig-solar-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-solar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Marathon performance under different solar radiation levels
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="finding-the-most-effective-weather-parameter" class="level2">
+<h2 class="anchored" data-anchor-id="finding-the-most-effective-weather-parameter">Finding The Most Effective Weather Parameter</h2>
+<p>To identify the most effective weather parameter, we used linear regression to quantify the effects of various weather variables. We began with a saturated model that included <code>WBGT</code>, <code>rh</code>, <code>SR</code>, <code>wind</code>, <code>age</code>, <code>sex</code>, and the interactions of <code>age</code> and <code>sex</code> with each of the other variables. To refine the model, we applied step wise regression to systematically remove non-significant interaction terms. We used ANOVA to justify our variable selections.</p>
+<p>After this process, we arrived at a final model that included <code>WBGT</code>, <code>rh</code>, <code>SR</code>, <code>age</code>, <code>sex</code>, and the interaction terms <code>age</code> * (<code>WBGT</code> + <code>rh</code> + <code>SR</code>). We then extracted the coefficients and p-values for each variable. The results revealed that the main effect of WBGT was the strongest weather parameter influencing marathon performance. For each unit increase in WBGT, the marathon completion rate increased by 0.7599, suggesting that higher WBGT positively affects performance.</p>
+<p>Relative humidity (rh) was found to be the most significant interaction term. The coefficient for the interaction between rh and age was -0.0066, indicating that as age increases, the negative effect of relative humidity on marathon performance becomes more pronounced. Specifically, this negative coefficient suggests that for older participants, higher humidity levels lead to a greater decrease in performance.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Estimate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Std. Error</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">P value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">WBGT</td>
+<td style="text-align: right;">0.7599203</td>
+<td style="text-align: right;">0.1606748</td>
+<td style="text-align: right;">4.729555</td>
+<td style="text-align: right;">0.0000023</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rh</td>
+<td style="text-align: right;">0.2833237</td>
+<td style="text-align: right;">0.0300667</td>
+<td style="text-align: right;">9.423175</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SR</td>
+<td style="text-align: right;">0.0430045</td>
+<td style="text-align: right;">0.0054758</td>
+<td style="text-align: right;">7.853617</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">2.6603884</td>
+<td style="text-align: right;">0.0701670</td>
+<td style="text-align: right;">37.915068</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sexMale</td>
+<td style="text-align: right;">-4.8096322</td>
+<td style="text-align: right;">0.6008337</td>
+<td style="text-align: right;">-8.004931</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">WBGT:age</td>
+<td style="text-align: right;">-0.0048466</td>
+<td style="text-align: right;">0.0032459</td>
+<td style="text-align: right;">-1.493152</td>
+<td style="text-align: right;">0.1354258</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rh:age</td>
+<td style="text-align: right;">-0.0065661</td>
+<td style="text-align: right;">0.0005991</td>
+<td style="text-align: right;">-10.960677</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SR:age</td>
+<td style="text-align: right;">-0.0011102</td>
+<td style="text-align: right;">0.0001098</td>
+<td style="text-align: right;">-10.109251</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<p>In this report, we examined the influence of both internal factors (age, sex) and external factors (weather variables) on marathon performance. By analyzing data from five major marathons, we identified several key findings regarding the physiological and environmental impacts on marathon completion times.</p>
+<p>Our analysis showed that while male and female runners have distinct race performances, with men generally finishing faster, weather conditions impact both genders similarly. This suggests that the performance gap is largely due to physiological differences rather than varying sensitivities to weather. This aligns with <span class="citation" data-cites="Ely2007">(<a href="#ref-Ely2007" role="doc-biblioref">M. R. Ely et al. 2007</a>)</span>, who observed similar weather-related performance declines in male and female elite runners. However, weather conditions had different effects across age groups. Among weather variables, WBGT (Wet Bulb Globe Temperature) had the strongest influence on marathon completion, with a 0.7599 increase in completion rate and relative humidity has a -0.0066 adjustment for age with each unit increase in WBGT. This supports <span class="citation" data-cites="Ely2010">(<a href="#ref-Ely2010" role="doc-biblioref">B. R. Ely et al. 2010</a>)</span>, who found that aerobic performance declines in hot environments, even with modest hyperthermia.</p>
+<p>Relative humidity (RH) and solar radiation (SR) also impacted performance, though to a lesser extent, while wind speed showed a unique pattern. While its direct effect on performance was relatively minor, it exhibited the strongest interaction with age among all weather variables, suggesting that older runners may be particularly sensitive to wind conditions. This age-dependent sensitivity likely reflects the reduced thermoregulatory capacity and cardiovascular adaptability observed in older adults.</p>
+<p>The progressive impact of increasing WBGT on performance across all age groups supports the concept of a “prescriptive zone” for temperature regulation during exercise, as described by <span class="citation" data-cites="Ely2007">(<a href="#ref-Ely2007" role="doc-biblioref">M. R. Ely et al. 2007</a>)</span>. When environmental conditions push runners outside this zone, performance inevitably declines as the body struggles to maintain thermal balance. This is evident in our findings, which show that the impact of adverse weather conditions increases with both age and completion time, indicating that slower runners face compounded challenges due to prolonged exposure to unfavorable weather.</p>
+<p>A limitation of our analysis is that the dataset only includes weather variables, without accounting for other critical factors such as training status, nutrition, and overall health. Furthermore, the smaller sample sizes in the youngest (10-19) and oldest (80-99) age groups may affect the reliability of our results for these populations. Future research should incorporate these additional factors and ensure more balanced representation across age groups.</p>
+<p>These findings have significant implications for runners, race organizers, and medical personnel. Race organizers should consider developing age-specific guidelines for weather-based race modifications, rather than applying uniform standards across all participants. Runners, especially older athletes or those expecting longer completion times, should adjust their strategies and performance expectations based on weather conditions, with particular attention to WBGT forecasts. Future research could focus on creating more accurate models to predict individual performance decrements based on both personal factors (age, sex, fitness level) and environmental conditions.</p>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Besson2022" class="csl-entry" role="listitem">
+Besson, T., R. Macchi, J. Rossi, C. Y. Morio, Y. Kunimasa, C. Nicol, and G. Y. Millet. 2022. <span>“Sex Differences in Endurance Running.”</span> <em>Sports Medicine</em> 52 (6): 1235–57.
+</div>
+<div id="ref-Ely2010" class="csl-entry" role="listitem">
+Ely, B. R., S. N. Cheuvront, R. W. Kenefick, and M. N. Sawka. 2010. <span>“Aerobic Performance Is Degraded, Despite Modest Hyperthermia, in Hot Environments.”</span> <em>Med Sci Sports Exerc</em> 42 (1): 135–41.
+</div>
+<div id="ref-Ely2007" class="csl-entry" role="listitem">
+Ely, M. R., S. N. Cheuvront, W. O. Roberts, and S. J. Montain. 2007. <span>“Impact of Weather on Marathon-Running Performance.”</span> <em>Medicine and Science in Sports and Exercise</em> 39 (3): 487–93.
+</div>
+<div id="ref-Kenney2003" class="csl-entry" role="listitem">
+Kenney, W. L., and T. A. Munce. 2003. <span>“Invited Review: Aging and Human Temperature Regulation.”</span> <em>Journal of Applied Physiology</em> 95 (6): 2598–2603.
+</div>
+<div id="ref-Yanovich2020" class="csl-entry" role="listitem">
+Yanovich, R., I. Ketko, and N. Charkoudian. 2020. <span>“Sex Differences in Human Thermoregulation: Relevance for 2020 and Beyond.”</span> <em>Physiology</em> 35 (3): 177–84.
+</div>
+</div>
+</section>
+<section id="code-appendix" class="level1">
+<h1>Code Appendix</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and process marathon race records</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>record <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"course_record.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Race =</span> <span class="fu">case_when</span>(                     <span class="co"># Recode race names based on abbreviation</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                          Race <span class="sc">==</span> <span class="st">"B"</span> <span class="sc">~</span> <span class="st">"Boston"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                          Race <span class="sc">==</span> <span class="st">"C"</span> <span class="sc">~</span> <span class="st">"Chicago"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                          Race <span class="sc">==</span> <span class="st">"NY"</span> <span class="sc">~</span> <span class="st">"NYC"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                          Race <span class="sc">==</span> <span class="st">"TC"</span> <span class="sc">~</span> <span class="st">"Twin Cities"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                          Race <span class="sc">==</span> <span class="st">"D"</span> <span class="sc">~</span> <span class="st">"Grandmas"</span>),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">Gender =</span> <span class="fu">case_when</span>(                   <span class="co"># Recode gender labels</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                            Gender <span class="sc">==</span> <span class="st">"M"</span> <span class="sc">~</span> <span class="st">"Male"</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                            Gender <span class="sc">==</span> <span class="st">"F"</span> <span class="sc">~</span> <span class="st">"Female"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">record =</span> CR)                         <span class="co"># Rename column 'CR' to 'record' for clarity</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and process air quality index data (AQI) from another dataset</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>aqi <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"aqi_values_ext.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> date_local <span class="sc">%&gt;%</span> ymd <span class="sc">%&gt;%</span> year) <span class="sc">%&gt;%</span>   <span class="co"># Extract year from the 'date_local' column</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(marathon, year) <span class="sc">%&gt;%</span>                    <span class="co"># Group data by marathon and year</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">aqi =</span> <span class="fu">mean</span>(aqi, <span class="at">na.rm =</span> T),            <span class="co"># Compute average AQI for each group</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">arithmetic_mean =</span> <span class="fu">mean</span>(arithmetic_mean)) <span class="co"># Compute average arithmetic mean AQI</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the main project dataset and process it</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"project1.csv"</span>, <span class="at">header =</span> T,        <span class="co"># Read the dataset with custom column names</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>               <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"race"</span>, <span class="st">"year"</span>, <span class="st">"sex"</span>, <span class="st">"flag"</span>, <span class="st">"age"</span>, </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"CR"</span>, <span class="st">"Td"</span>, <span class="st">"Tw"</span>, <span class="st">"rh"</span>, <span class="st">"Tg"</span>, <span class="st">"SR"</span>, </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"DP"</span>, <span class="st">"wind"</span>, <span class="st">"WBGT"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span> <span class="fu">case_when</span>(                        <span class="co"># Recode race values based on numeric codes</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>                        race <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Boston"</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>                        race <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Chicago"</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>                        race <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"NYC"</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>                        race <span class="sc">==</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"Twin Cities"</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>                        race <span class="sc">==</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">"Grandmas"</span>,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA</span>),  <span class="co"># NA for invalid race codes</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">sex =</span> <span class="fu">case_when</span>(                         <span class="co"># Recode sex values based on numeric codes</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                        sex <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Female"</span>,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>                        sex <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Male"</span>,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>                        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA</span>),   <span class="co"># NA for invalid sex codes</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>         <span class="at">flag =</span> <span class="fu">factor</span>(flag, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"White"</span>, <span class="st">"Green"</span>, <span class="st">"Yellow"</span>, <span class="st">"Red"</span>, <span class="st">"Black"</span>))) <span class="sc">%&gt;%</span>   <span class="co"># Reorder 'flag' factor levels</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(aqi, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"race"</span> <span class="ot">=</span> <span class="st">"marathon"</span>, <span class="st">"year"</span>)) <span class="sc">%&gt;%</span>   <span class="co"># Merge with AQI data by race and year</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(record, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"race"</span> <span class="ot">=</span> <span class="st">"Race"</span>, <span class="st">"year"</span> <span class="ot">=</span> <span class="st">"Year"</span>, <span class="st">"sex"</span> <span class="ot">=</span> <span class="st">"Gender"</span>))  <span class="co"># Merge with marathon record data by race, year, and sex</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate the adjusted Course Record (CR) in hours, based on the existing record and CR value</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CR =</span> (<span class="dv">1</span> <span class="sc">+</span> CR <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">*</span> <span class="fu">period_to_seconds</span>(<span class="fu">hms</span>(record)) <span class="sc">/</span> <span class="dv">3600</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select the relevant columns for the summary table</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(race, sex, age, CR) <span class="sc">%&gt;%</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate summary statistics using the gtsummary package</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"race"</span>,  <span class="co"># Group the summary statistics by 'race'</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define how each variable should be summarized</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">statistic =</span> <span class="fu">list</span>(</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>      age <span class="sc">~</span> <span class="st">"{min} - {max} ({median})"</span>,  <span class="co"># For 'age', report the range and median</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>      CR <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>,  <span class="co"># For 'CR', report the mean and standard deviation</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>      sex <span class="sc">~</span> <span class="st">"{n}/{N} ({p}%)"</span>  <span class="co"># For 'sex', report the count, total, and percentage</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Include information on missing data if present</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">missing =</span> <span class="st">"ifany"</span>,  <span class="co"># Show missing data only if any is present</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set the number of decimal places for the CR variable</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">digits =</span> <span class="fu">list</span>(CR <span class="sc">~</span> <span class="dv">2</span>),  <span class="co"># Round 'CR' to two decimal places</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the variables in the summary table</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">list</span>(</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">sex =</span> <span class="st">"Sex"</span>,  <span class="co"># Label for 'sex'</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">age =</span> <span class="st">"Age"</span>,  <span class="co"># Label for 'age'</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>      <span class="at">CR =</span> <span class="st">"Course Record(h)"</span>  <span class="co"># Label for 'CR'</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Modify the table header to change the default header text for the first column</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_header</span>(<span class="at">stat_0 =</span> <span class="st">"**Statistics**"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add a footnote explaining the summary statistics format</span></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_footnote</span>(</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_stat_cols</span>() <span class="sc">~</span> <span class="st">"Mean (SD), Min - Max are reported for continuous variables. Count (%) for categorical variables."</span></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add overall statistics (e.g., overall mean, overall count)</span></span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>  gt<span class="sc">::</span><span class="fu">cols_width</span>(<span class="fu">starts_with</span>(<span class="st">"stat"</span>) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">150</span>))</span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select only the relevant columns and remove the specified ones</span></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(arithmetic_mean, sex, age, CR, record)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove duplicate rows to ensure each row is unique</span></span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate summary statistics using the gtsummary package</span></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl_summary</span>(</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"race"</span>,  <span class="co"># Group the summary statistics by 'race'</span></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define how each variable should be summarized</span></span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">statistic =</span> <span class="fu">list</span>(</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>      year <span class="sc">~</span> <span class="st">"{min} - {max}"</span>,  <span class="co"># For 'year', report the range (min and max)</span></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>      <span class="co"># For the continuous variables (aqi, Td, Tw, rh, Tg, SR, DP, wind, WBGT),</span></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>      <span class="co"># report the mean and standard deviation</span></span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(aqi, Td, Tw, rh, Tg, SR, DP, wind, WBGT) <span class="sc">~</span> <span class="st">"{mean} ({sd})"</span>,</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>      <span class="co"># For categorical variables, report the count, total, and percentage</span></span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>      <span class="fu">all_categorical</span>() <span class="sc">~</span> <span class="st">"{n}/{N} ({p}%)"</span></span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add information about missing data only if any is present</span></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>    <span class="at">missing =</span> <span class="st">"ifany"</span>,</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set the number of decimal places for continuous variables</span></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>    <span class="at">digits =</span> <span class="fu">list</span>(</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(aqi, Td, Tw, rh, Tg, SR, DP, wind, WBGT) <span class="sc">~</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),  <span class="co"># Round continuous variables to 2 decimal places</span></span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>      year <span class="sc">~</span> <span class="dv">0</span>  <span class="co"># Round 'year' to no decimal places</span></span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the variables in the summary table for better readability</span></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="fu">list</span>(</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> <span class="st">"Year"</span>, </span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>      <span class="at">flag =</span> <span class="st">"Flag"</span>, </span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>      <span class="at">aqi =</span> <span class="st">"Air Quality Index"</span>, </span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>      <span class="at">Td =</span> <span class="st">"Dry bulb temperature"</span>, </span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>      <span class="at">Tw =</span> <span class="st">"Wet bulb temperature"</span>, </span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>      <span class="at">rh =</span> <span class="st">"Relative humidity"</span>, </span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>      <span class="at">Tg =</span> <span class="st">"Black globe temperature"</span>, </span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>      <span class="at">SR =</span> <span class="st">"Solar radiation"</span>, </span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>      <span class="at">DP =</span> <span class="st">"Dew point"</span>, </span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>      <span class="at">wind =</span> <span class="st">"Wind"</span>, </span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>      <span class="at">WBGT =</span> <span class="st">"Wet bulb globe temperature"</span></span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Modify the header of the summary table to include a custom title for the statistics column</span></span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_header</span>(<span class="at">stat_0 =</span> <span class="st">"**Statistics**"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add a footnote explaining how the statistics are calculated</span></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_footnote</span>(</span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>    <span class="fu">all_stat_cols</span>() <span class="sc">~</span> <span class="st">"Mean (SD), Min - Max are reported for continuous variables. Count (%) for categorical variables."</span></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add overall statistics (e.g., overall mean, overall count) to the table</span></span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overall</span>()</span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove the specified columns from the dataset</span></span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">"age"</span>, <span class="st">"year"</span>, <span class="st">"sex"</span>, <span class="st">"race"</span>, <span class="st">"CR"</span>, <span class="st">"flag"</span>, <span class="st">"aqi"</span>, <span class="st">"arithmetic_mean"</span>, <span class="st">"record"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure that only unique rows are kept in the dataset (removes duplicate rows)</span></span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove any rows with missing data (NA values)</span></span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate a pairwise plot (scatterplot matrix) using the 'GGally' package</span></span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>  GGally<span class="sc">::</span><span class="fu">ggpairs</span>()</span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a new 'CR' variable by applying a transformation to the existing 'CR' and 'record' columns</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The formula adjusts 'CR' by multiplying it with 1 + CR * 0.01, then converts the 'record' variable (time) from seconds to hours</span></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CR =</span> (<span class="dv">1</span> <span class="sc">+</span> CR <span class="sc">*</span> <span class="fl">0.01</span>) <span class="sc">*</span> <span class="fu">period_to_seconds</span>(<span class="fu">hms</span>(record)) <span class="sc">/</span> <span class="dv">3600</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plot using 'ggplot2' to visualize the relationship between 'age' and 'CR'</span></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>age, <span class="at">color=</span>sex, <span class="at">fill=</span>sex)) <span class="sc">+</span></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use facet_wrap to create separate plots for each 'race'</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> race) <span class="sc">+</span></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fit a smoothed line using LOESS (locally estimated scatterplot smoothing) for each facet</span></span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The 'se = TRUE' argument adds a confidence interval around the smoothed line</span></span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">y =</span> CR), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># LOESS curve with confidence interval</span></span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add labels to the x-axis and y-axis</span></span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age"</span>, <span class="at">y =</span> <span class="st">"Time (Hour)"</span>) <span class="sc">+</span></span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use a minimal theme for a cleaner plot design</span></span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing values (complete cases only)</span></span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plot using ggplot with 'age' on the x-axis, 'CR' (Course Record) on the y-axis, and 'flag' to color the data</span></span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>age, <span class="at">y=</span>CR, <span class="at">fill=</span>flag)) <span class="sc">+</span></span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use facet_wrap to create separate plots for each 'sex' (male/female)</span></span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> sex) <span class="sc">+</span></span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add a smoothed line using LOESS (locally estimated scatterplot smoothing), with confidence intervals</span></span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The 'col=flag' aesthetic is used to color the line based on 'flag'</span></span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">col=</span>flag), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># LOESS curve with confidence intervals</span></span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add labels to the x-axis and y-axis</span></span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Age"</span>, <span class="at">y =</span> <span class="st">"Course Record(%)"</span>) <span class="sc">+</span></span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use a minimal theme for a clean and simple visual style</span></span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Customize the color for the smoothed lines using a manual color scale for 'flag'</span></span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"White"</span> <span class="ot">=</span> <span class="st">"#D9D9D9"</span>, <span class="st">"Green"</span> <span class="ot">=</span> <span class="st">"#4CAF50"</span>, </span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"Yellow"</span> <span class="ot">=</span> <span class="st">"#FFD700"</span>, <span class="st">"Red"</span> <span class="ot">=</span> <span class="st">"#E57373"</span>, <span class="st">"Black"</span> <span class="ot">=</span> <span class="st">"black"</span>)) <span class="sc">+</span>  <span class="co"># Custom color for lines</span></span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Customize the fill color for the confidence intervals, using the same color scheme as the lines</span></span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"White"</span> <span class="ot">=</span> <span class="st">"#D9D9D9"</span>, <span class="st">"Green"</span> <span class="ot">=</span> <span class="st">"#4CAF50"</span>, </span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"Yellow"</span> <span class="ot">=</span> <span class="st">"#FFD700"</span>, <span class="st">"Red"</span> <span class="ot">=</span> <span class="st">"#E57373"</span>, <span class="st">"Black"</span> <span class="ot">=</span> <span class="st">"black"</span>))   <span class="co"># Same color for CIs</span></span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot for the relationship between relative humidity (rh) and Course Record (CR) by sex</span></span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a>plt_sex <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing data</span></span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plot with 'rh' (relative humidity) on the x-axis, 'CR' on the y-axis, and fill color based on sex</span></span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>rh, <span class="at">y=</span>CR, <span class="at">fill=</span>sex)) <span class="sc">+</span></span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add a LOESS smoothed line for each sex, with confidence intervals</span></span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">col=</span>sex), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># LOESS curve with shaded CI</span></span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the axes</span></span>
+<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Relative Humidity"</span>, <span class="at">y =</span> <span class="st">"Course Record(%)"</span>) <span class="sc">+</span></span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use a minimal theme for the plot</span></span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot for the relationship between relative humidity (rh) and Course Record (CR) by age group</span></span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a>plt_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing data</span></span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Categorize age into bins (age groups)</span></span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">cut</span>(age, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>, <span class="cn">Inf</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust the bin names for better readability</span></span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">case_when</span>(age <span class="sc">==</span> <span class="st">"(0,30]"</span> <span class="sc">~</span> <span class="st">"&lt;30"</span>,</span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a>                         age <span class="sc">==</span> <span class="st">"(80,Inf]"</span> <span class="sc">~</span> <span class="st">"&gt;80"</span>,</span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>                         <span class="cn">TRUE</span> <span class="sc">~</span> age)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert age into a factor with ordered levels</span></span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">factor</span>(age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"&lt;30"</span>, <span class="st">"(30,40]"</span>, <span class="st">"(40,50]"</span>, <span class="st">"(50,60]"</span>, </span>
+<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"(60,70]"</span>, <span class="st">"(70,80]"</span>, <span class="st">"&gt;80"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plot with 'rh' (relative humidity) on the x-axis, 'CR' on the y-axis, and fill color based on age group</span></span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>rh, <span class="at">y=</span>CR, <span class="at">fill=</span>age)) <span class="sc">+</span></span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add a LOESS smoothed line for each age group, with confidence intervals</span></span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">col=</span>age), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># LOESS curve with shaded CI</span></span>
+<span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the axes</span></span>
+<span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Relative Humidity"</span>, <span class="at">y =</span> <span class="st">"Course Record(%)"</span>) <span class="sc">+</span></span>
+<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use a minimal theme for the plot</span></span>
+<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-258"><a href="#cb1-258" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the two plots (plt_age and plt_sex) vertically</span></span>
+<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a>plt_age <span class="sc">/</span> plt_sex</span>
+<span id="cb1-260"><a href="#cb1-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot for the relationship between wind speed and Course Record (CR) by sex</span></span>
+<span id="cb1-262"><a href="#cb1-262" aria-hidden="true" tabindex="-1"></a>plt_sex <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing data</span></span>
+<span id="cb1-264"><a href="#cb1-264" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plot with 'wind' on the x-axis, 'CR' on the y-axis, and fill color based on sex</span></span>
+<span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>wind, <span class="at">y=</span>CR, <span class="at">fill=</span>sex)) <span class="sc">+</span></span>
+<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add a LOESS smoothed line for each sex, with confidence intervals</span></span>
+<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">col=</span>sex), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># LOESS curve with shaded CI</span></span>
+<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the axes</span></span>
+<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Wind"</span>, <span class="at">y =</span> <span class="st">"Course Record(%)"</span>) <span class="sc">+</span></span>
+<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use a minimal theme for the plot</span></span>
+<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot for the relationship between wind speed and Course Record (CR) by age group</span></span>
+<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a>plt_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing data</span></span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Categorize age into bins (age groups)</span></span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">cut</span>(age, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>, <span class="cn">Inf</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust the bin names for better readability</span></span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">case_when</span>(age <span class="sc">==</span> <span class="st">"(0,30]"</span> <span class="sc">~</span> <span class="st">"&lt;30"</span>,</span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a>                         age <span class="sc">==</span> <span class="st">"(80,Inf]"</span> <span class="sc">~</span> <span class="st">"&gt;80"</span>,</span>
+<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a>                         <span class="cn">TRUE</span> <span class="sc">~</span> age)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert age into a factor with ordered levels</span></span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">factor</span>(age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"&lt;30"</span>, <span class="st">"(30,40]"</span>, <span class="st">"(40,50]"</span>, <span class="st">"(50,60]"</span>, </span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"(60,70]"</span>, <span class="st">"(70,80]"</span>, <span class="st">"&gt;80"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plot with 'wind' on the x-axis, 'CR' on the y-axis, and fill color based on age group</span></span>
+<span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>wind, <span class="at">y=</span>CR, <span class="at">fill=</span>age)) <span class="sc">+</span></span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add a LOESS smoothed line for each age group, with confidence intervals</span></span>
+<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">col=</span>age), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># LOESS curve with shaded CI</span></span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the axes</span></span>
+<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Wind"</span>, <span class="at">y =</span> <span class="st">"Course Record(%)"</span>) <span class="sc">+</span></span>
+<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use a minimal theme for the plot</span></span>
+<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the two plots (plt_age and plt_sex) vertically</span></span>
+<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a>plt_age <span class="sc">/</span> plt_sex</span>
+<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-310"><a href="#cb1-310" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot for the relationship between Solar Radiation (SR) and Course Record (CR) by sex</span></span>
+<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a>plt_sex <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing data</span></span>
+<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plot with 'SR' on the x-axis, 'CR' on the y-axis, and fill color based on sex</span></span>
+<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>SR, <span class="at">y=</span>CR, <span class="at">fill=</span>sex)) <span class="sc">+</span></span>
+<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add a LOESS smoothed line for each sex, with confidence intervals</span></span>
+<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">col=</span>sex), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># LOESS curve with shaded CI</span></span>
+<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the axes</span></span>
+<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Solar Radiation"</span>, <span class="at">y =</span> <span class="st">"Course Record(%)"</span>) <span class="sc">+</span></span>
+<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-324"><a href="#cb1-324" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use a minimal theme for the plot</span></span>
+<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb1-326"><a href="#cb1-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot for the relationship between Solar Radiation (SR) and Course Record (CR) by age group</span></span>
+<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a>plt_age <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows with missing data</span></span>
+<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Categorize age into bins (age groups)</span></span>
+<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">cut</span>(age, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>, <span class="cn">Inf</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust the bin names for better readability</span></span>
+<span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">case_when</span>(age <span class="sc">==</span> <span class="st">"(0,30]"</span> <span class="sc">~</span> <span class="st">"&lt;30"</span>,</span>
+<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a>                         age <span class="sc">==</span> <span class="st">"(80,Inf]"</span> <span class="sc">~</span> <span class="st">"&gt;80"</span>,</span>
+<span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a>                         <span class="cn">TRUE</span> <span class="sc">~</span> age)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert age into a factor with ordered levels</span></span>
+<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">factor</span>(age, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"&lt;30"</span>, <span class="st">"(30,40]"</span>, <span class="st">"(40,50]"</span>, <span class="st">"(50,60]"</span>, </span>
+<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a>                                      <span class="st">"(60,70]"</span>, <span class="st">"(70,80]"</span>, <span class="st">"&gt;80"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a plot with 'SR' on the x-axis, 'CR' on the y-axis, and fill color based on age group</span></span>
+<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>SR, <span class="at">y=</span>CR, <span class="at">fill=</span>age)) <span class="sc">+</span></span>
+<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add a LOESS smoothed line for each age group, with confidence intervals</span></span>
+<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">col=</span>age), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">linewidth=</span><span class="fl">1.2</span>, <span class="at">alpha=</span><span class="fl">0.2</span>) <span class="sc">+</span>  <span class="co"># LOESS curve with shaded CI</span></span>
+<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Label the axes</span></span>
+<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Solar Radiation"</span>, <span class="at">y =</span> <span class="st">"Course Record(%)"</span>) <span class="sc">+</span></span>
+<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use a minimal theme for the plot</span></span>
+<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the two plots (plt_age and plt_sex) vertically</span></span>
+<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a>plt_age <span class="sc">/</span> plt_sex</span>
+<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the first model with interactions between age and weather parameters, and sex and weather parameters</span></span>
+<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a>mdl <span class="ot">&lt;-</span> <span class="fu">glm</span>(CR <span class="sc">~</span> WBGT <span class="sc">+</span> rh <span class="sc">+</span> SR <span class="sc">+</span> wind <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> age <span class="sc">*</span> (WBGT <span class="sc">+</span> rh <span class="sc">+</span> SR <span class="sc">+</span> wind) <span class="sc">+</span> sex <span class="sc">*</span> (WBGT <span class="sc">+</span> rh <span class="sc">+</span> SR <span class="sc">+</span> wind), </span>
+<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> df, <span class="at">family =</span> gaussian)</span>
+<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the second model, removing sex interactions with weather parameters</span></span>
+<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a>mdl <span class="ot">&lt;-</span> <span class="fu">glm</span>(CR <span class="sc">~</span> WBGT <span class="sc">+</span> rh <span class="sc">+</span> SR <span class="sc">+</span> wind <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> age <span class="sc">*</span> (WBGT <span class="sc">+</span> rh <span class="sc">+</span> SR <span class="sc">+</span> wind), </span>
+<span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> df, <span class="at">family =</span> gaussian)</span>
+<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the third model, removing some age-weather interactions</span></span>
+<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a>mdl <span class="ot">&lt;-</span> <span class="fu">glm</span>(CR <span class="sc">~</span> WBGT <span class="sc">+</span> rh <span class="sc">+</span> SR <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> age <span class="sc">*</span> (WBGT <span class="sc">+</span> rh <span class="sc">+</span> SR), </span>
+<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> df, <span class="at">family =</span> gaussian)</span>
+<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract and display the coefficients and p-values, excluding the intercept</span></span>
+<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mdl)<span class="sc">$</span>coefficients[<span class="sc">-</span><span class="dv">1</span>, ] <span class="sc">%&gt;%</span></span>
+<span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"P value"</span> <span class="ot">=</span> <span class="st">"Pr(&gt;|t|)"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
